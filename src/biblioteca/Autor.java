@@ -1,4 +1,4 @@
-package main;
+package biblioteca;
 import java.util.Date;
 
 import excepciones.NombreInvalidoException;

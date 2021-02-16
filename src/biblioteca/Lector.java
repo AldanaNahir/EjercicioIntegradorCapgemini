@@ -1,4 +1,4 @@
-package main;
+package biblioteca;
 
 import excepciones.DireccionInvalidaException;
 import excepciones.IdInvalidoException;
@@ -74,9 +74,16 @@ public class Lector implements Comparable<Lector> {
 		this.multa = multa;
 	}
 
-	public Multa getMulta() {
+	public boolean tieneMulta() {
 
-		return this.multa;
+		boolean hayMulta = false;
+		
+		if (this.multa != null) {
+			
+			hayMulta = true;
+		}
+		
+		return hayMulta;
 	}
 
 	public Prestamo[] getPrestamos() {
@@ -92,6 +99,7 @@ public class Lector implements Comparable<Lector> {
 
 				copiasRetiradas[i] = copia;
 				prestamos[i] = prestamo;
+				break;
 			}
 		}
 
@@ -101,11 +109,10 @@ public class Lector implements Comparable<Lector> {
 
 		Copia copiaDevuelta = null;
 		Prestamo prestamoCorrespondiente = null;
-
 		for (int i = 0; i < this.copiasRetiradas.length; i++) {
-
+			
 			if (copiasRetiradas[i] == copia) {
-
+				
 				copiaDevuelta = copiasRetiradas[i];
 				prestamoCorrespondiente = prestamos[i];
 				copiasRetiradas[i] = null;

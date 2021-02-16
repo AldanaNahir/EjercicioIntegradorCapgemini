@@ -1,4 +1,4 @@
-package main;
+package biblioteca;
 
 import java.util.Date;
 import java.util.Iterator;
@@ -74,21 +74,23 @@ public class Biblioteca {
 			if (unLector == lector) {
 
 				info = unLector.devolverCopia(copiaLibro);
-				((Copia) info[2]).setCopia(EstadoCopia.BIBLIOTECA);
+				((Copia) info[0]).setCopia(EstadoCopia.BIBLIOTECA);
 				copiasLibros.add(copiaLibro);
+				
+				long diferenciaEn_ms = fechaDevolucion.getTime() - ((Prestamo) info[1]).getFin().getTime(); 
+				long dias = diferenciaEn_ms / (1000 * 60 * 60 * 24);
+
+				if ((int) dias > 30) {
+
+					Multa multa = new Multa(fechaDevolucion, 2);
+					unLector.multar(multa);
+
+				}
 
 			}
 		}
 
-		long diferenciaEn_ms = ((Prestamo) info[2]).getFin().getTime() - fechaDevolucion.getTime();
-		long dias = diferenciaEn_ms / (1000 * 60 * 60 * 24);
-
-		if ((int) dias > 30) {
-
-			Multa multa = new Multa(fechaDevolucion, 2);
-			unLector.multar(multa);
-
-		}
+		
 	}
 
 	public Set<Copia> getCopiasLibros() {

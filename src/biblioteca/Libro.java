@@ -1,4 +1,4 @@
-package main;
+package biblioteca;
 import excepciones.FechaInvalidaException;
 import excepciones.NombreInvalidoException;
 

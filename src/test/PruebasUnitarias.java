@@ -1,6 +1,8 @@
 package test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.text.ParseException;
@@ -11,9 +13,8 @@ import java.util.TreeSet;
 import org.junit.Before;
 import org.junit.Test;
 
+import biblioteca.*;
 import excepciones.*;
-import junit.framework.Assert;
-import main.*;
 
 public class PruebasUnitarias {
 
@@ -85,24 +86,128 @@ public class PruebasUnitarias {
 
 		Iterator<Copia> itrCopia = this.biblioteca.getCopiasLibros().iterator();
 		
-		System.out.println("Print A");
-
-		biblioteca.prestar(itrCopia.next(), lectorA, new Prestamo(sdf2.parse(dateInString2)));
+		Copia copiaA = itrCopia.next();
+		Copia copiaB = itrCopia.next();
+		Copia copiaC = itrCopia.next();
 		
-		System.out.println("Print B");
 
-		biblioteca.prestar(itrCopia.next(), lectorA, new Prestamo(sdf2.parse(dateInString2)));
+		biblioteca.prestar(copiaA, lectorA, new Prestamo(sdf2.parse(dateInString2)));
 		
-		System.out.println("Print C");
 
-		biblioteca.prestar(itrCopia.next(), lectorA, new Prestamo(sdf2.parse(dateInString2)));
+		biblioteca.prestar(copiaB, lectorA, new Prestamo(sdf2.parse(dateInString2)));
+		
 
-		while (itrCopia.hasNext()) {
-
+		biblioteca.prestar(copiaC, lectorA, new Prestamo(sdf2.parse(dateInString2)));
+		
+		
+		for (Copia c: this.biblioteca.getCopiasLibros()) {
+			
 			contador++;
 		}
 
+
 		assertEquals(7, contador);
+	}
+	
+	@SuppressWarnings("deprecation")
+	@Test
+	public void testPrestarCuatro() throws ParseException {
+
+		SimpleDateFormat sdf2 = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
+		String dateInString2 = "11-02-2021 10:20:56";
+		int contador = 0;
+
+		Iterator<Copia> itrCopia = this.biblioteca.getCopiasLibros().iterator();
+		
+		Copia copiaA = itrCopia.next();
+		Copia copiaB = itrCopia.next();
+		Copia copiaC = itrCopia.next();
+		Copia copiaD = itrCopia.next();
+		
+
+		biblioteca.prestar(copiaA, lectorA, new Prestamo(sdf2.parse(dateInString2)));
+		
+
+		biblioteca.prestar(copiaB, lectorA, new Prestamo(sdf2.parse(dateInString2)));
+		
+
+		biblioteca.prestar(copiaC, lectorA, new Prestamo(sdf2.parse(dateInString2)));
+		
+		
+		biblioteca.prestar(copiaD, lectorB, new Prestamo(sdf2.parse(dateInString2)));
+		
+		
+		for (Copia c: this.biblioteca.getCopiasLibros()) {
+			
+			contador++;
+		}
+
+
+		assertEquals(6, contador);
+	}
+	
+	
+	@Test
+	public void testPedirYDevolver() throws ParseException, DiasInvalidosException {
+		
+		SimpleDateFormat sdf2 = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
+		String dateInString2 = "11-02-2021 10:20:56";
+		String dateInString3 = "13-02-2021 10:20:56";
+		int contador = 0;
+
+		Iterator<Copia> itrCopia = this.biblioteca.getCopiasLibros().iterator();
+		
+		Copia copiaA = itrCopia.next();
+		Copia copiaB = itrCopia.next();
+		Copia copiaC = itrCopia.next();
+		Copia copiaD = itrCopia.next();
+		
+
+		biblioteca.prestar(copiaA, lectorA, new Prestamo(sdf2.parse(dateInString2)));
+		
+
+		biblioteca.prestar(copiaB, lectorA, new Prestamo(sdf2.parse(dateInString2)));
+		
+
+		biblioteca.prestar(copiaC, lectorA, new Prestamo(sdf2.parse(dateInString2)));
+		
+		
+		biblioteca.registrarDevolucion(copiaB, lectorA, sdf2.parse(dateInString3));
+		
+		
+		biblioteca.prestar(copiaD, lectorA, new Prestamo(sdf2.parse(dateInString2)));
+		
+		
+		for (Copia c: this.biblioteca.getCopiasLibros()) {
+			
+			contador++;
+		}
+
+
+		assertEquals(7, contador);
+		
+	}
+	
+	@Test
+	public void testPedirConMulta() throws ParseException, DiasInvalidosException {
+		
+		SimpleDateFormat sdf2 = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
+		String dateInString2 = "11-02-2021 10:20:56";
+		String dateInString3 = "13-04-2021 10:20:56";
+
+		Iterator<Copia> itrCopia = this.biblioteca.getCopiasLibros().iterator();
+		
+		Copia copiaA = itrCopia.next();
+
+		biblioteca.prestar(copiaA, lectorA, new Prestamo(sdf2.parse(dateInString2)));
+		
+		biblioteca.registrarDevolucion(copiaA, lectorA, sdf2.parse(dateInString3));
+		
+		assertTrue(lectorA.tieneMulta());
+		
+		
+		
+		
 	}
 
 }
