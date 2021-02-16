@@ -1,10 +1,10 @@
-import java.util.ArrayList;
+package main;
 
 import excepciones.DireccionInvalidaException;
 import excepciones.IdInvalidoException;
 import excepciones.NombreInvalidoException;
 
-public class Lector {
+public class Lector implements Comparable<Lector> {
 
 	private int numeroDeSocio;
 	private String nombre;
@@ -14,31 +14,30 @@ public class Lector {
 	private Multa multa;
 	private Prestamo[] prestamos;
 
-	public Lector(int numeroSocio, String nombre, String telefono, String direccion) throws NombreInvalidoException, DireccionInvalidaException, IdInvalidoException {
-		
+	public Lector(int numeroSocio, String nombre, String telefono, String direccion)
+			throws NombreInvalidoException, DireccionInvalidaException, IdInvalidoException {
+
 		if (nombre.equals("") || nombre.equals(" ")) {
-			
+
 			throw new NombreInvalidoException("Ha ingresado un nombre invalido para el lector");
 		}
-		
+
 		if (direccion.equals("") || direccion.equals(" ")) {
-			
+
 			throw new DireccionInvalidaException("Ha ingresado una direccion invalida para el lector");
 		}
-		
+
 		if (numeroSocio < 0) {
-			
+
 			throw new IdInvalidoException("Ha ingresado un ID invalido para el lector");
 		}
-		
-		
 
 		this.numeroDeSocio = numeroSocio;
 		this.nombre = nombre;
 		this.telefono = telefono;
 		this.direccion = direccion;
 		this.multa = null;
-		
+
 		this.prestamos = new Prestamo[3];
 
 		this.copiasRetiradas = new Copia[3];
@@ -74,18 +73,16 @@ public class Lector {
 
 		this.multa = multa;
 	}
-	
+
 	public Multa getMulta() {
-		
+
 		return this.multa;
 	}
-	
+
 	public Prestamo[] getPrestamos() {
-		
+
 		return this.prestamos;
 	}
-	
-
 
 	public void agregarCopia(Copia copia, Prestamo prestamo) {
 
@@ -97,11 +94,10 @@ public class Lector {
 				prestamos[i] = prestamo;
 			}
 		}
-		
-		
+
 	}
 
-	public Object [] devolverCopia(Copia copia) {
+	public Object[] devolverCopia(Copia copia) {
 
 		Copia copiaDevuelta = null;
 		Prestamo prestamoCorrespondiente = null;
@@ -117,10 +113,30 @@ public class Lector {
 				break;
 			}
 		}
-		
-		Object[] copiaPrestamo = {copiaDevuelta, prestamoCorrespondiente};
+
+		Object[] copiaPrestamo = { copiaDevuelta, prestamoCorrespondiente };
 
 		return copiaPrestamo;
 
 	}
+
+	public int compareTo(Lector o) {
+		int output;
+
+		if (this.getNumeroDeSocio() > o.getNumeroDeSocio()) {
+
+			output = 1;
+
+		} else if (this.getNumeroDeSocio() < o.getNumeroDeSocio()) {
+
+			output = -1;
+
+		} else {
+
+			output = 0;
+		}
+
+		return output;
+	}
+
 }

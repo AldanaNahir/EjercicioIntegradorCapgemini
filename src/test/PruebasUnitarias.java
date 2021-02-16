@@ -1,25 +1,40 @@
+package test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Iterator;
 import java.util.TreeSet;
 
-import excepciones.DireccionInvalidaException;
-import excepciones.FechaInvalidaException;
-import excepciones.IdInvalidoException;
-import excepciones.NombreInvalidoException;
+import org.junit.Before;
+import org.junit.Test;
 
-public class Prueba { //main, excepciones, pasarlo a archivo, subirlo al git
+import excepciones.*;
+import junit.framework.Assert;
+import main.*;
 
-	
-	public static void main (String [] args) throws ParseException, IdInvalidoException, FechaInvalidaException, NombreInvalidoException, DireccionInvalidaException {
-		
+public class PruebasUnitarias {
+
+	Biblioteca biblioteca;
+	Lector lectorA;
+	Lector lectorB;
+
+	// -----------------------------------------------//
+
+	@Before
+	public void crearObjetos() throws IdInvalidoException, FechaInvalidaException, NombreInvalidoException,
+			ParseException, DireccionInvalidaException {
 
 		TreeSet<Copia> copiasLibros = new TreeSet<Copia>();
+		TreeSet<Lector> lectores = new TreeSet<Lector>();
+		
 		
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
 	    String dateInString = "31-08-1982 10:20:56";
+	    
 		
 		Copia copia1 = new Copia(EstadoCopia.BIBLIOTECA, 1, new Libro("Cuento1", new Autor("Jose", "Argentino", sdf.parse(dateInString)), 2010, TipoLibro.NOVELA, "Pepito"));
 		Copia copia2 = new Copia(EstadoCopia.BIBLIOTECA, 2, new Libro("Cuento2", new Autor("Jose", "Argentino", sdf.parse(dateInString)), 2010, TipoLibro.NOVELA, "Pepito"));
@@ -32,6 +47,7 @@ public class Prueba { //main, excepciones, pasarlo a archivo, subirlo al git
 		Copia copia9 = new Copia(EstadoCopia.BIBLIOTECA, 9, new Libro("Cuento9", new Autor("Jose", "Argentino", sdf.parse(dateInString)), 2010, TipoLibro.NOVELA, "Pepito"));
 		Copia copia10 = new Copia(EstadoCopia.BIBLIOTECA, 10, new Libro("Cuento10", new Autor("Jose", "Argentino", sdf.parse(dateInString)), 2010, TipoLibro.NOVELA, "Pepito"));
 		
+		
 		copiasLibros.add(copia1);
 		copiasLibros.add(copia2);
 		copiasLibros.add(copia3);
@@ -43,30 +59,50 @@ public class Prueba { //main, excepciones, pasarlo a archivo, subirlo al git
 		copiasLibros.add(copia9);
 		copiasLibros.add(copia10);
 		
-		Biblioteca biblioteca = new Biblioteca(copiasLibros);
 		
-		Lector lectorA = new Lector(2, "Marquitos", "48444041", "Victor Hugo 5279, Villa Bosch");
-		Lector lectorB = new Lector(3, "Pedrito", "48444042", "Victor Hugo 5278, Villa Bosch");
+		lectorA = new Lector(2, "Marquitos", "48444041", "Victor Hugo 5279, Villa Bosch");
+		lectorB = new Lector(3, "Pedrito", "48444042", "Victor Hugo 5278, Villa Bosch");
 		
-		SimpleDateFormat sdf2 = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
-	    String dateInString2 = "11-02-2021 10:20:56";
 		
-		biblioteca.prestar(copia1, lectorA, new Prestamo(sdf2.parse(dateInString2)));
-		biblioteca.prestar(copia2, lectorA, new Prestamo(sdf2.parse(dateInString2)));
-		biblioteca.prestar(copia3, lectorA, new Prestamo(sdf2.parse(dateInString2)));
-		biblioteca.prestar(copia4, lectorB, new Prestamo(sdf2.parse(dateInString2)));
-		biblioteca.prestar(copia5, lectorB, new Prestamo(sdf2.parse(dateInString2)));
+		lectores.add(lectorA);
+		lectores.add(lectorB);
 		
-		TreeSet<Copia> stock = (TreeSet<Copia>) biblioteca.getCopiasLibros();
 		
-		Iterator <Copia> itrStock = stock.iterator();
+		biblioteca = new Biblioteca(copiasLibros, lectores);
+	    
 		
-		while(itrStock.hasNext()) { 
-			
-			Copia copia = itrStock.next();
-			
-			System.out.println("Nombre del libro: " + copia.getNombreLibro().getTitulo());
-		}
-	
 	}
+
+	// -----------------------------------------------//
+
+	@SuppressWarnings("deprecation")
+	@Test
+	public void testPrestarTres() throws ParseException {
+
+		SimpleDateFormat sdf2 = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
+		String dateInString2 = "11-02-2021 10:20:56";
+		int contador = 0;
+
+		Iterator<Copia> itrCopia = this.biblioteca.getCopiasLibros().iterator();
+		
+		System.out.println("Print A");
+
+		biblioteca.prestar(itrCopia.next(), lectorA, new Prestamo(sdf2.parse(dateInString2)));
+		
+		System.out.println("Print B");
+
+		biblioteca.prestar(itrCopia.next(), lectorA, new Prestamo(sdf2.parse(dateInString2)));
+		
+		System.out.println("Print C");
+
+		biblioteca.prestar(itrCopia.next(), lectorA, new Prestamo(sdf2.parse(dateInString2)));
+
+		while (itrCopia.hasNext()) {
+
+			contador++;
+		}
+
+		assertEquals(7, contador);
+	}
+
 }

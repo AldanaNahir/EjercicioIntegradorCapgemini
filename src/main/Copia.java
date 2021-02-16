@@ -1,3 +1,4 @@
+package main;
 import excepciones.IdInvalidoException;
 
 public class Copia implements Comparable <Copia>{

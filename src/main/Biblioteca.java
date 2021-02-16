@@ -1,4 +1,5 @@
-import java.util.Calendar;
+package main;
+
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Set;
@@ -11,10 +12,10 @@ public class Biblioteca {
 	private Set<Copia> copiasLibros;
 	private Set<Lector> lectores;
 
-	public Biblioteca(Set<Copia> copias) {
+	public Biblioteca(Set<Copia> copias, Set<Lector> lectores) {
 
-		this.copiasLibros = new TreeSet<Copia>();
-		this.lectores = new TreeSet<Lector>();
+		this.copiasLibros = copias;
+		this.lectores = lectores;
 	}
 
 	public void prestar(Copia copiaLibro, Lector lector, Prestamo prestamo) {
@@ -23,14 +24,15 @@ public class Biblioteca {
 		Iterator<Copia> itrCopia = copiasLibros.iterator();
 		Copia unaCopia = null;
 		boolean lectorEncontrado = false;
-		
-		while(itrCopia.hasNext()) {
-			
+
+		while (itrCopia.hasNext()) {
+
 			unaCopia = itrCopia.next();
-			
-			if (unaCopia == copiaLibro) { 
-				
+
+			if (unaCopia == copiaLibro) {
+
 				copiasLibros.remove(unaCopia);
+				break;
 			}
 		}
 
@@ -40,26 +42,31 @@ public class Biblioteca {
 
 			if (unLector == lector) {
 
-				unLector.agregarCopia(copiaLibro, prestamo);
 				unaCopia.setCopia(EstadoCopia.PRESTADO);
+				unLector.agregarCopia(copiaLibro, prestamo);
+				lectorEncontrado = true;
 			}
+
+		}
+		
+		if (!lectorEncontrado) {
 			
-			else {
-				
-				copiasLibros.add(unaCopia);
-				
-			}
+			copiasLibros.add(unaCopia);
+			unaCopia.setCopia(EstadoCopia.BIBLIOTECA);
 		}
 
 	}
 
-	public void registrarDevolucion(Copia copiaLibro, Lector lector, Date fechaDevolucion) throws DiasInvalidosException {
+	
+
+	public void registrarDevolucion(Copia copiaLibro, Lector lector, Date fechaDevolucion)
+			throws DiasInvalidosException {
 
 		Iterator<Lector> itrLect = lectores.iterator();
 		Object info[] = null;
 		boolean lectorEncontrado = false;
 		Lector unLector = null;
-		
+
 		while (itrLect.hasNext() && !lectorEncontrado) {
 
 			unLector = itrLect.next();
@@ -69,17 +76,16 @@ public class Biblioteca {
 				info = unLector.devolverCopia(copiaLibro);
 				((Copia) info[2]).setCopia(EstadoCopia.BIBLIOTECA);
 				copiasLibros.add(copiaLibro);
-				
+
 			}
 		}
-		
-		long diferenciaEn_ms = ((Prestamo) info[2]).getFin().getTime() - fechaDevolucion.getTime(); 
+
+		long diferenciaEn_ms = ((Prestamo) info[2]).getFin().getTime() - fechaDevolucion.getTime();
 		long dias = diferenciaEn_ms / (1000 * 60 * 60 * 24);
-		
+
 		if ((int) dias > 30) {
-			
-			
-			Multa multa = new Multa (fechaDevolucion, 2);
+
+			Multa multa = new Multa(fechaDevolucion, 2);
 			unLector.multar(multa);
 
 		}
