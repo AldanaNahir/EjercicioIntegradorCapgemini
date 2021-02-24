@@ -1,18 +1,22 @@
 package biblioteca;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+
 import excepciones.DireccionInvalidaException;
 import excepciones.IdInvalidoException;
 import excepciones.NombreInvalidoException;
 
+@Entity
 public class Lector implements Comparable<Lector> {
 
-	private int numeroDeSocio;
-	private String nombre;
-	private String telefono;
-	private String direccion;
-	private Copia[] copiasRetiradas;
-	private Multa multa;
-	private Prestamo[] prestamos;
+@Column	private int numeroDeSocio;
+@Column private String nombre;
+@Column private String telefono;
+@Column private String direccion;
+		private Copia[] copiasRetiradas;
+@Column	private Multa multa;
+		private Prestamo[] prestamos;
 
 	public Lector(int numeroSocio, String nombre, String telefono, String direccion)
 			throws NombreInvalidoException, DireccionInvalidaException, IdInvalidoException {
